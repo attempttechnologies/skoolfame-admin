@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">skoolfame</string>
+    <string name="facebook_app_id">399532145417337</string>
+    <string name="fb_login_protocol_scheme">fb399532145417337</string>
+    <string name="facebook_client_token">099349ea10495a42f975ce49f8a93348</string>
+
+</resources>
