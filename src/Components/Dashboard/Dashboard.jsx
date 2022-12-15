@@ -10,15 +10,17 @@ import moment from "moment";
 import localization from 'moment/locale/en-in';
 
 const Dashboard = () => {
+  const [searchData, setSearchData] = useState("");
   const [liveUser, setLiveUser] = useState([]);
   const [loading, setLoading] = useState(false);
   const [allUser, setAllUser] = useState([]);
+  const [allUserS, setAllUserS] = useState([]);
   const [allUserL, setAllUserL] = useState([]);
   const [totalUser, setTotalUser] = useState(0);
   const [totalSchool, setTotalSchool] = useState(0);
-  const [current_page, setCurrent_page] = useState(1);
-  const per_page = 10
-  const [pagination, setPagination] = useState(allUserL?.length ? Math.ceil(allUserL?.length / per_page) : 1);
+  const [Current_page, setCurrent_page] = useState(1);
+  const per_page = 10;
+  const [pagination, setPagination] = useState( 1);
   const pf = process.env.REACT_APP_PUBLIC_URL;
   // const pf = "http://192.168.40.160:3000"
   moment.updateLocale('en-in', localization);
@@ -26,19 +28,13 @@ const Dashboard = () => {
   //METHOD
 
   const AllFriends = (pages) => {
-    console.log("pages---", pages);
 
     if (pages === 1) {
-      setF_Data(allUser?.slice(pages - 1, per_page));
+      setAllUserL(searchData ? allUserS.filter((user) => `${user.user?.first_name + " " + user?.user?.last_name}`.toLowerCase().includes(searchData)).slice(pages - 1, per_page):allUser.slice(pages - 1, per_page));
     } else {
-      setF_Data(
-        allUser?.slice(
-          pages * per_page - per_page,
-          pages * per_page - per_page + per_page
-        )
-      );
+      setAllUserL(searchData ? allUserS.filter((user) => `${user.user?.first_name + " " + user?.user?.last_name}`.toLowerCase().includes(searchData)).slice(pages * per_page - per_page, pages * per_page - per_page + per_page) : allUser?.slice( pages * per_page - per_page, pages * per_page - per_page + per_page ));
     }
-    current_page(pages);
+    setCurrent_page(pages);
   };
 
 
@@ -51,7 +47,9 @@ const Dashboard = () => {
         const { status, message, data,totalUser,totalSchool } = User;
         if (status === 1) {
           setAllUser(data);
-          setAllUserL(() => data?.slice(current_page - 1, per_page));
+          setAllUserS(data);
+          setPagination(data ? Math.ceil(data?.length / per_page) : 1)
+          setAllUserL(() => data?.slice(Current_page - 1, per_page));
           setTotalUser(totalUser)
           setTotalSchool(totalSchool)
           setLoading(false);
@@ -68,7 +66,27 @@ const Dashboard = () => {
 
   useEffect(() => {
     AllUser();
+    document.title = " Skoolfame | Dashboard"
   }, []);
+
+  // for searching users
+
+  useEffect(() => {
+    const searching = (e) => {
+        setCurrent_page(1);
+        // setFors(true)
+        if (searchData.length ) {
+           
+          setAllUserL(allUserS.filter((user) => `${user.user?.first_name + " " + user?.user?.last_name}`.toLowerCase().includes(searchData)).slice(0, per_page));
+          setPagination(allUserL ? Math.ceil(allUserS.filter((user) => `${user.user?.first_name + " " + user?.user?.last_name}`.toLowerCase().includes(searchData))?.length / per_page) : 1)
+
+        } else {
+            setAllUserL(allUser?.slice(Current_page - 1, per_page));
+            setPagination(allUser ? Math.ceil(allUser?.length / per_page) : 1)
+        }
+    }
+    searching()
+}, [searchData]);
   // arr.filter((a)=>new RegExp(st,"i").test(a))
   return (
     <Layout>
@@ -80,7 +98,7 @@ const Dashboard = () => {
                 <h5>Users</h5>
                 <p>{totalUser}</p>
               </div>
-              <div className="dot"></div>
+             
             </div>
           </Col>
 
@@ -90,7 +108,7 @@ const Dashboard = () => {
                 <h5>Schools</h5>
                 <p>{totalSchool}</p>
               </div>
-              <div className="dot"></div>
+              
             </div>
           </Col>
           <Col lg={4} md={4} sm={6} className="mt-3">
@@ -99,7 +117,7 @@ const Dashboard = () => {
                 <h5>Live Users</h5>
                 <p>{allUser?.length}</p>
               </div>
-              <div className="dot"></div>
+              
             </div>
           </Col>
         </Row>
@@ -109,7 +127,7 @@ const Dashboard = () => {
             <div className="user-data">
               <div className="user-data-header d-flex align-items-center justify-content-between">
                 <h1>Live Users</h1>
-                <input type="text" />
+                <input type="text"value={searchData} onChange={(e) => setSearchData(e.target.value)} placeholder="Search Name"/>
               </div>
               <div className="user-data-table mt-4">
                 <Table responsive className="mb-0 px-4 pb-2">
@@ -125,7 +143,7 @@ const Dashboard = () => {
                       </th>
                       <th className="p-0">
                         <span className="d-block py-3 px-5">
-                          Like
+                          Views
                         </span>
                       </th>
                     </tr>
@@ -133,32 +151,34 @@ const Dashboard = () => {
 
                   <tbody>
                   {!loading && allUserL.length !== 0 && allUserL?.map((u,i) => {
-return( <tr key={i}>
+return(
+   <tr key={i}>
   <td className="bg-orange">
     <div className="delete-group d-flex align-items-center gap-3">
       <img  src={u.user?.user_profile_image ? `${pf}/${u.user?.user_profile_image}` : "../images/user.png" } alt="" className="imgs"/>
-      <span className="d-block">{`${u.user?.first_name + " " + u.user?.last_name}`}</span>
+      <span className="d-block text-ellipse" >{`${u.user?.first_name + " " + u.user?.last_name}`}</span>
     </div>
   </td>
   <td className="bg-orange">
-    <span className="d-block py-3 px-5">3:00 PM</span>
+    <span className="d-block py-3 px-5">{ moment(u?.user?.live_time).format('LT')}</span>
   </td>
   <td className="bg-orange">
-    <span className="d-block py-3 px-5">80,785</span>
+    <span className="d-block py-3 px-5">{u?.join_user?.length ? u?.join_user?.length :0}</span>
   </td>
-</tr>)
+</tr>
+)
                   })}
                    
 
                   </tbody>
                 </Table>
               </div>
-              {loading ? <h1 className="lod"><LoadingSpinner /></h1> : allUserL?.length === 0 ? <h1 className="lod">NoOne live</h1> : null}
+              {loading ? <h1 className="lod"><LoadingSpinner /></h1> : allUserL?.length === 0 ? <h1 className="lod">No-one live</h1> : null}
               <div className="d-flex justify-content-end mt-4">
               <Pagination_new
                    AllUser={AllFriends}
                    pagination={pagination}
-                   current_page={current_page}
+                   current_page={Current_page}
               />
               </div>
             </div>

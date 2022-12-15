@@ -6,13 +6,16 @@
     height: calc(100vh - 260px);
     overflow-y: auto;
     margin: 10px 0;
+    scrollbar-width: none;
 }
 
-.main-chat .chat-window-scroll{
+.main-chat .chat-window-scroll {
     height: calc(100vh - 260px);
     overflow-y: auto;
     margin: 10px 0;
+    scrollbar-width: none;
 }
+
 .main-chat .chat-window-scroll::-webkit-scrollbar,
 .main-chat .chat-box-scroll::-webkit-scrollbar {
     width: 4px;
@@ -26,7 +29,7 @@
     max-width: 100%;
     height: 57px;
     outline: none;
-    padding: 20px;
+    padding:15px 50px 15px 20px ;
     background-image: url(../../../public/images/search_icon.png);
     background-position: calc(100% - 22px) 18px, calc(100% - 20px) 14px, 100% 0;
     background-size: 20px;
@@ -42,12 +45,18 @@
     align-items: center;
     justify-content: space-between;
     padding: 12px;
+    
 }
 
 .main-chat .chat-box-scroll .chat-bar h6 {
     font-weight: 500;
     font-size: 20px;
     color: #000000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 224px;
+   
 }
 
 .main-chat .chat-box-scroll .chat-bar p {
@@ -56,10 +65,15 @@
     text-transform: capitalize;
     color: #8B7768;
     padding-top: 5px;
+    max-width: 225px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .main-chat .chat-box-scroll .chat-bar .chat-img {
     height: 55px;
+    min-width: 55px;
     width: 55px;
     object-fit: cover;
     border-radius: 50%;
@@ -91,6 +105,7 @@
     font-size: 28px;
     text-transform: capitalize;
     color: #000000;
+    word-break: break-all;
 }
 
 .main-chat .chat-window .chat-inner {
@@ -119,6 +134,10 @@
     font-weight: 500;
     font-size: 20px;
     color: #000000;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 224px;
 }
 
 .main-chat .chat-window .chat-inner p {
@@ -139,6 +158,7 @@
 
 .main-chat .chat-window .chat-inner .chat-img {
     height: 55px;
+    min-width: 55px;
     width: 55px;
     object-fit: cover;
     border-radius: 50%;
@@ -155,13 +175,57 @@
     justify-content: flex-end;
     padding-left: 15px;
 }
-#breakword{
-    max-width:339px;
-    padding-right :5px;
-    word-break: break-all;
-  
-  }
 
+#breakword {
+    max-width: 339px;
+    padding-right: 5px;
+    word-break: break-all;
+
+}
+
+@media (max-width:1600px) {
+    .main-chat .chat-box-scroll .chat-bar h6 {
+        font-size: 18px;
+        max-width: 224px;
+    }
+    .main-chat .chat-box-scroll .chat-bar .chat-img {
+        height: 45px;
+        min-width: 45px;
+        width: 45px;
+    }
+    .main-chat .chat-box-scroll .chat-bar p {
+        padding-top: 2px;
+    }
+}
+
+@media (max-width:1300px) {
+    .main-chat .chat-window .chat-inner {
+        max-width: 400px;
+        margin-bottom: 15px;
+        padding: 10px;
+    }
+    .main-chat .chat-window .chat-inner .chat-img {
+        height: 50px;
+        min-width: 50px;
+        width: 50px;
+    }
+    .main-chat .chat-window .chat-left {
+        padding-left: 35px;
+    }
+    .main-chat .chat-window .chat-right {
+        padding-right: 35px;
+    }
+    .main-chat .chat-window .chat-inner h6 {
+        font-size: 18px;
+    }
+    .main-chat .chat-window .chat-inner p {
+        padding-top: 2px;
+    }
+    .main-chat .chat-box-scroll .chat-bar {
+        padding: 10px;
+        margin-top: 15px;
+    }
+}
 @media (max-width:768px) {
     .main-chat .chat-box-scroll .chat-bar .chat-img {
         height: 45px;
@@ -171,9 +235,14 @@
     .main-chat .chat-window .chat-inner .chat-img {
         height: 45px;
         width: 45px;
+        min-width: 45px;
+    }
+    .main-chat .chat-window .chat-header h6 {
+        font-size: 24px;
     }
 }
-.new-h6{
+
+.new-h6 {
     width: 100%;
     display: flex;
     justify-content: space-between;

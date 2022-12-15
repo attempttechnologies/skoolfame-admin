@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Modal, NavLink, Pagination, Row, Table } from "react-bootstrap";
+import { Button, Col, Modal, Row, Table } from "react-bootstrap";
 import Layout from "../../../Layout";
 import { GrFormClose } from "react-icons/gr";
-
-
 import "../schools/document.css";
-import { Link } from "react-router-dom";
 import moment from "moment";
 import { toast } from "react-toastify";
 import Pagination_new from "../../Pagination_new";
@@ -22,25 +19,24 @@ const School_Requests = () => {
 
   const [requestSchools, setRequestSchools] = useState([]);
   const [allSchools, setAllSchools] = useState([]);
+  const [length, setLength] = useState(allSchools ? allSchools.length : []);
   const [current_page, setCurrent_page] = useState(1);
   const [loading, setLoading] = useState(true);
   const per_page = 5;
-  const Pagination = requestSchools?.length ? Math.ceil(requestSchools?.length / per_page) : 1;
+  const [Pagination, setPagination] = useState(1);
   moment.updateLocale('en-in', localization);
 
   // METHODS
 
   const AllSchoolRequests = async () => {
-
     try {
       const SchoolData = await getAllSchoolsRequest();
-
-      const { status, message, data, count, paginationValue, page } = SchoolData;
+      const { status, message, data } = SchoolData;
       if (status === 1) {
-        console.log(data, "-------------------")
-        setRequestSchools(data);
-        setAllSchools(data?.slice(current_page - 1, per_page))
         setLoading(false);
+        setRequestSchools(data);
+        setAllSchools(data?.slice(current_page - 1, per_page));
+        setPagination(data?.length ? Math.ceil(data?.length / per_page) : 1);
       } else {
         toast.error(message);
         setLoading(false);
@@ -51,8 +47,6 @@ const School_Requests = () => {
   };
 
   const AllFriends = async (pages) => {
-    console.log("pages---", pages)
-
     if (pages === 1) {
       setAllSchools(requestSchools?.slice(pages - 1, per_page))
     } else {
@@ -62,16 +56,15 @@ const School_Requests = () => {
   };
 
 
-  const handelDelete = async (id,name) => {
-    let check = window.confirm("are you sure you want to delete "+name+" school ?")
+  const handelDelete = async (id, name) => {
+    let check = window.confirm("are you sure you want to delete " + name + " school ?")
     if (check) {
       try {
         const { data } = await axios.delete(`/delete-school?id=${id}`);
-
         if (data.status == 1) {
           toast.success(data.message);
-          AllSchoolRequests();
-          AllFriends(current_page)
+          setCurrent_page(1);
+          setLength(length - 1);
         }
       } catch (error) {
         console.log(error);
@@ -79,29 +72,28 @@ const School_Requests = () => {
     }
   };
 
-  const handelAccept = async (id,name) => {
-    let check = window.confirm("are you sure you want to update "+name+" ?")
-    if (check ) {
+  const handelAccept = async (id, name) => {
+    let check = window.confirm("are you sure you want to update " + name + " ?")
+    if (check) {
       try {
         const { data } = await axios.patch(`/update-school-request?id=${id}`);
-
         if (data.status == 1) {
           toast.success(data.message);
-          AllSchoolRequests();
-          AllFriends(current_page)
+          setCurrent_page(1);
+          setLength(length - 1);
         }
       } catch (error) {
         console.log(error);
       }
     }
   };
-
 
 
   useEffect(() => {
 
     AllSchoolRequests();
-  }, []);
+    document.title = " Skoolfame | School Requests"
+  }, [length]);
 
   return (
     <Layout>
@@ -111,7 +103,6 @@ const School_Requests = () => {
             <div className="user-data">
               <div className="user-data-header d-flex align-items-center justify-content-between">
                 <h1>School Requests</h1>
-
               </div>
               <div className="user-data-table mt-4">
                 <Table responsive className="mb-0 px-4 pb-2">
@@ -125,46 +116,31 @@ const School_Requests = () => {
                   <tbody>
                     {!loading && allSchools?.length !== 0 && allSchools?.map((school) => {
                       const { _id, school_profile_image, name, createdAt, users } = school;
-
                       return (
-
                         <tr key={_id}>
                           <td className="bg-orange">
-                            <span className="d-block py-3 pe-5">{name}</span>
+                            <span className="d-block py-3 pe-5 text-ellipse">{name}</span>
                           </td>
-
                           <td className="bg-orange">
                             <span className="delete-group d-flex align-items-center justify-content-end gap-3">
-                              <Button className="btn-accept" onClick={() => handelAccept(_id,name)}>Accept</Button>
-                              <Button onClick={() => handelDelete(_id,name)}>Delete</Button>
+                              <Button className="btn-accept" onClick={() => handelAccept(_id, name)}>Accept</Button>
+                              <Button onClick={() => handelDelete(_id, name)}>Decline</Button>
                             </span>
                           </td>
                         </tr>
-
                       );
                     })}
-                    {/* <tr >
-                      <td className="p-0">
-                        <span className="d-block py-3 px-5">Hello</span>
-                      </td>
-
-                      <td >
-                        <div className="delete-group d-flex align-items-center justify-content-end gap-3">
-                          <Button className="btn-accept">Accept</Button>
-                          <Button >Delete</Button>
-                        </div>
-                      </td>
-                    </tr> */}
                   </tbody>
                 </Table>
               </div>
-              {loading ? <h1 className="lod"><LoadingSpinner /></h1> : allSchools.length === 0 && false ? <h1 className="lod">no data available of schools</h1> : null}
+              {loading ? <h1 className="lod"><LoadingSpinner /></h1> : allSchools.length == 0 ? <h1 className="lod">No Schools Request</h1> : null}
               <div className="d-flex justify-content-end mt-4">
-                <Pagination_new
-                  AllUser={AllFriends}
-                  pagination={Pagination}
-                  current_page={current_page}
-                />
+                {allSchools?.length !== 0
+                  ? <Pagination_new
+                    AllUser={AllFriends}
+                    pagination={Pagination}
+                    current_page={current_page}
+                  /> : null}
               </div>
             </div>
           </Col>
@@ -179,21 +155,18 @@ const School_Requests = () => {
               <GrFormClose />
             </Button>
           </div>
-
           <div className="modal-form my-4">
             <div className="input-field">
               <label>Disease Name</label>
               <input type="text" />
             </div>
           </div>
-
           <div className="modal-btn-group d-flex align-items-center justify-content-end gap-3">
             <Button className="cancel" onClick={() => handleClose()}>Cancel</Button>
             <Button className="ok">OK</Button>
           </div>
         </Modal.Body>
       </Modal>
-
     </Layout>
   );
 }

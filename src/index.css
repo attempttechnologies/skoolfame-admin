@@ -15,6 +15,8 @@ code {
   text-align: -webkit-center;
     margin-top: 21px;
     margin-bottom: 441px;
+    display: flex;
+    justify-content: center;
 }
 .feedback{
   background: #FFECDF;
@@ -39,4 +41,27 @@ code {
 }
 .fixdate{
   width: 30%!important;
+}
+.timebox-chat{
+  text-align: center;
+    margin-bottom: 17px;
+}
+.timebox-span{
+  background: #f8b48440;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.text-ellipse{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 250px;
+}
+.area:focus {
+  border: none !important;
+}
+textarea:focus-visible {
+  
+  outline: none !important;
 }

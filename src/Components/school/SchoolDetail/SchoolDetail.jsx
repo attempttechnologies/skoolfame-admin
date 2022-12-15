@@ -14,13 +14,14 @@ import { toast } from "react-toastify";
 const SchoolDetail = () => {
 
   const [show, setShow] = useState(false);
+  const [rev, setRev] = useState(false);
   const [searchData, setSearchData] = useState("");
   const [schools, setSchools] = useState([]);
   const [paginationVal, setPaginationVal] = useState(1);
   const [current_page, setCurrent_page] = useState(1);
   const [loading, setLoading] = useState(true);
   const [newName, setNewName] = useState("");
-  const [togel, setTogel] = useState(true);
+  
   const { id } = useParams();
   const perPage = 5;
   const pf = process.env.REACT_APP_PUBLIC_URL;
@@ -28,36 +29,42 @@ const SchoolDetail = () => {
 
   // METHODS
   
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    setShow(false);
+    setNewName("");
+  };
   const handleShow = () => setShow(true);
 
   const rever = () => {
-    setSchools(schools.reverse())
+    // setSchools([...schools].reverse());
+    setRev(!rev)
   };
 
   const addName = async () => {
+    if(newName.trim().length == 0){
+      toast.error("Please enter name");
+      return}
     try {
       const res = await axios.post("/add-superlative", {  school_id: id,  name: newName,});
       if (res.data.status == 1) {
-        console.log("in");
         setShow(false);
         SchoolDetails(current_page);
         toast.success(res.data.message);
+        setNewName("");
       } else {
         toast.error(res.data.message);
       }
-    } catch (error) {}
+    } catch (error) {console.log(error);}
   };
 
 
   const SchoolDetails = async (pages) => {
     try {
-      const SchoolData = await getSchool(perPage, pages, searchData, id);
+      const SchoolData = await getSchool(perPage, pages, searchData, id,rev);
       const { status, message, data, count, paginationValue, page } =
         SchoolData;
       if (status === 1) {
         setSchools(data);
-        console.log("allUser----------", data);
         setPaginationVal(paginationValue);
         setCurrent_page(page);
         setLoading(false);
@@ -72,11 +79,12 @@ const SchoolDetail = () => {
 
   useEffect(() => {
     SchoolDetails();
-  }, [searchData]);
+  }, [searchData,rev]);
 
-  useEffect(() => {
-    rever()
-  }, [togel, schools]);
+  useEffect(()=>{
+    document.title="Skoolfame | Superlatives"
+  },[])
+ 
 
   return (
     <Layout>
@@ -85,8 +93,9 @@ const SchoolDetail = () => {
           <Col lg={12}>
             <div className="user-data">
               <div className="user-data-header d-flex align-items-center justify-content-between">
-                <h1>School Details</h1>
+                <h1>Superlatives </h1>
                 <input
+                placeholder="Search name"
                   type="text"
                   value={searchData}
                   onChange={(e) => setSearchData(e.target.value)}
@@ -104,16 +113,16 @@ const SchoolDetail = () => {
                       </th>
                       <th className="p-0">
                         <span className="d-flex py-3 px-5">
-                          Create At
-                          <Button className="bg-transparent border-0 shadow-none p-0"  onClick={() => setTogel((toge) => !toge)}>
+                          Created At
+                          <Button className="bg-transparent border-0 shadow-none p-0"  onClick={rever}>
                             <img src="../images/sorting-new.png" alt="" />
                           </Button>
                         </span>
                       </th>
                       <th className="p-0">
-                        <span className="d-flex align-items-center justify-content-end px-5">
+                        {/* <span className="d-flex align-items-center justify-content-end px-5">
                           <Button  onClick={handleShow}  className="btn-plus shadow-none">+</Button>
-                        </span>
+                        </span> */}
                       </th>
                     </tr>
                   </thead>
@@ -126,7 +135,7 @@ const SchoolDetail = () => {
                           <tr key={_id}>
                             <td className="bg-orange">
                               <div className="delete-group ">
-                                <Link to="" className="d-flex align-items-center gap-3 p-0 text-decoration-none">
+                                <div to="" className="d-flex align-items-center gap-3 p-0 text-decoration-none cursor-none">
                                   <span className="trophy">
                                     <img
                                       src={
@@ -137,10 +146,10 @@ const SchoolDetail = () => {
                                       alt=""
                                     />
                                   </span>
-                                  <span className="d-block">
+                                  <span className="d-block text-ellipse">
                                     {category_name}
                                   </span>
-                                </Link>
+                                </div>
                               </div>
                             </td>
                             <td className="bg-orange">
@@ -173,7 +182,7 @@ const SchoolDetail = () => {
                   <LoadingSpinner />
                 </h1>
               ) : schools?.length === 0 ? (
-                <h1 className="lod">no data available of schools</h1>
+                <h1 className="lod">no data available of superlative</h1>
               ) : null}
               <div className="d-flex justify-content-end mt-4">
                 <Pagination_new
@@ -201,7 +210,7 @@ const SchoolDetail = () => {
         <Modal.Body>
           <Form>
             <Form.Group controlId="formGridEmail">
-              <Form.Label>First Name</Form.Label>
+              <Form.Label>Name</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter Name"

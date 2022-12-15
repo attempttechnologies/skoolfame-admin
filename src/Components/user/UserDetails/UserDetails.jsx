@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../../../Layout";
 import "./UserDetails.css";
-import {  Col,  Row,  Table,  Pagination,  Form,  Button,  NavLink,  Modal,} from "react-bootstrap";
+import { Col, Row, Table, Pagination, Form, Button, NavLink, Modal, } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Album from "../Album";
 import { getAlbum, getAllUser, singleUserDetail } from "../../../controller/api";
@@ -32,7 +32,7 @@ const UserDetails = () => {
     ? Math.ceil(user?.VideoAlbum?.length / per_page_A_V)
     : 1; // change for user.friends
 
-  const per_page = 5;
+  const per_page = 2;
 
   const f_Pagination = user?.friends?.length
     ? Math.ceil(user?.friends?.length / per_page)
@@ -43,10 +43,10 @@ const UserDetails = () => {
     : 1;
 
   const index = user?.feedback?.length - 1;
-  const feedback = user?.feedback
-    ? user.feedback[index]?.rate
+  let feedback = user?.feedback
+    ? Number(user.feedback[index]?.rate)
     : null;
-
+  let co = user?.feedback ? user?.feedback[user?.feedback?.length - 1]?.comment : null;
   const { id } = useParams();
 
   moment.updateLocale("en-in", localization);
@@ -63,7 +63,6 @@ const UserDetails = () => {
 
       const albumData = await getAlbum(type, id)
       const { status, data } = albumData;
-      console.log("data---------", data, status)
       if (status == 1) {
         setAlbums(data)
         setCon(type)
@@ -76,73 +75,53 @@ const UserDetails = () => {
     }
   }
 
+  // all pagination
+
   const AllAlbum = async (pages) => {
-    console.log("pages---", pages);
 
     if (pages === 1) {
-      setAllAlbums(user?.friends?.slice(pages - 1, per_page_A_V));
+      setAllAlbums(user?.imageAlbum?.slice(pages - 1, per_page_A_V));
     } else {
-      setAllAlbums(
-        user?.friends?.slice(
-          pages * per_page_A_V - per_page_A_V,
-          pages * per_page_A_V - per_page_A_V + per_page_A_V
-        )
-      );
+      setAllAlbums(user?.imageAlbum?.slice(pages * per_page_A_V - per_page_A_V, pages * per_page_A_V));
     }
     set_A_Current_page(pages);
   };
 
   const AllVideo = async (pages) => {
-    console.log("pages---", pages);
 
     if (pages === 1) {
-      setAllVideos(user?.friends?.slice(pages - 1, per_page_A_V));
+      setAllVideos(user?.VideoAlbum?.slice(pages - 1, per_page_A_V));
     } else {
-      setAllVideos(
-        user?.friends?.slice(
-          pages * per_page_A_V - per_page_A_V,
-          pages * per_page_A_V - per_page_A_V + per_page_A_V
-        )
-      );
+      setAllVideos(user?.VideoAlbum?.slice(pages * per_page_A_V - per_page_A_V, pages * per_page_A_V));
     }
     set_V_Current_page(pages);
   };
 
   const AllFriends = async (pages) => {
-    console.log("pages---", pages);
 
     if (pages === 1) {
       setF_Data(user?.friends?.slice(pages - 1, per_page));
     } else {
-      setF_Data(
-        user?.friends?.slice(
-          pages * per_page - per_page,
-          pages * per_page - per_page + per_page
-        )
-      );
+      setF_Data(user?.friends?.slice(pages * per_page - per_page, pages * per_page));
     }
     set_F_Current_page(pages);
   };
 
   const AllRelationships = async (pages) => {
     if (pages === 1) {
-      setF_Data(() => user?.relationships?.slice(pages - 1, per_page));
+      setR_Data(() => user?.relationships?.slice(pages - 1, per_page));
     } else {
-      setF_Data(() =>
-        user?.relationships?.slice(
-          pages * per_page - per_page,
-          pages * per_page + per_page
-        )
-      );
+      setR_Data(() => user?.relationships?.slice(pages * per_page - per_page, pages * per_page));
     }
     set_R_Current_page(pages);
   };
+
+  //for first time only
 
   useEffect(() => {
     const getSingleUser = async () => {
       try {
         const user = await singleUserDetail(id);
-
         const { status, message, data } = user;
         if (status === 1) {
           setUser(data);
@@ -151,17 +130,18 @@ const UserDetails = () => {
             data?.relationships?.slice(_R_Current_page - 1, per_page)
           );
           setAllAlbums(() =>
-            data?.imageAlbum?.slice(_F_Current_page - 1, per_page)
-          ); // change for data.friends
+            data?.imageAlbum?.slice(_F_Current_page - 1, per_page_A_V)
+          );
           setAllVideos(() =>
-            data?.VideoAlbum?.slice(_R_Current_page - 1, per_page)
-          ); // change for data.relationships
+            data?.VideoAlbum?.slice(_R_Current_page - 1, per_page_A_V)
+          );
         }
       } catch (error) {
         console.log(error);
       }
     };
     getSingleUser();
+    document.title = "Skoolfame | User's Details";
   }, []);
 
   return (
@@ -173,7 +153,7 @@ const UserDetails = () => {
               <Col lg={12}>
                 <div className="user_details p-4">
                   <div className="user_details_information">
-                    <h1 className="user_details_headings">User Information</h1>
+                    <h1 className="user_details_headings"> User Information</h1>
                     <Form className="mt-4">
                       <Row>
                         <Col lg={6} md={6} className="mb-4">
@@ -225,31 +205,33 @@ const UserDetails = () => {
                           disabled
                         />
                       </Form.Group>
+                      <Form.Group className="mb-4" controlId="formGridAddress2">
+                        <Form.Label>School</Form.Label>
+                        <Form.Control
+                          type="text"
+                          placeholder={user?.school ? user?.school : "Not added"}
+                          disabled
+                        />
+                      </Form.Group>
 
                       <Form.Group className="mb-4" controlId="formGridAddress2">
                         <Form.Label>Feedback</Form.Label>
-                        {/* <Form.Control
-                                                    type="text"
-                                                    // placeholder={feedback ? feedback :"no feedback"}
-
-                                                    placeholder={`${9733}`}
-                                                    disabled
-                                                    // value={feedback}
-
-                                                /> */}
                         <p className="feedback">
-                          {feedback && [...Array(feedback)]?.map((u, i) => (
-                            <span style={{ color: "orange" }}>&#9733;</span>
-                          ))}
 
-                          {feedback && [...Array(5 - feedback)]?.map((u, i) => (
+                          {feedback && !feedback == 0 ? [...Array(feedback)]?.map((u, i) => (
+                            <span style={{ color: "orange" }}>&#9733;</span>
+                          )) : null}
+
+                          {feedback && !feedback == 0 ? [...Array(5 - feedback)]?.map((u, i) => (
                             <span>&#10032;</span>
-                          ))}
+                          )) : null}
 
                           {!feedback && [...Array(5)]?.map((u, i) => (
                             <span>&#10032;</span>
                           ))}
-                          <span style={{ color: "rgb(121 121 121)", marginLeft: "5px", fontSize: "10px" }}>{feedback ? feedback + ".0 " : "no feedback"}</span>
+                          <span style={{ color: "rgb(121 121 121)", marginLeft: "5px", fontSize: "10px" }}>
+                            {feedback == 0 || feedback ? feedback + ".0 " : null}
+                            {co || feedback >= 0 ? "feedback" : "no feedback"}</span>
                         </p>
                       </Form.Group>
 
@@ -274,7 +256,7 @@ const UserDetails = () => {
                         <Form.Label className="mb-0">Friends</Form.Label>
                       </div>
                       <div className="user-data-table mt-2">
-                        <Table responsive className="mb-0">
+                        <Table responsive className="mb-0 overflow-x-none">
                           <thead>
                             <tr>
                               <th className="p-0">
@@ -318,7 +300,7 @@ const UserDetails = () => {
                                               ? `${pf}/${user_profile_image}`
                                               : "../images/user.png"
                                           } alt="" />
-                                          <span className="d-block">
+                                          <span className="d-block text-ellipse" style={{ width: "175px" }}>
                                             {first_name + " " + last_name}
                                           </span>
                                         </Link>
@@ -335,21 +317,22 @@ const UserDetails = () => {
                                       </span>
                                     </td>
                                     <td className="px-5">
-                                      <span>{email}</span>
+                                      <span className="text-ellipse d-block" style={{ width: "150px" }}>{email}</span>
                                     </td>
                                   </tr>
                                 );
                               })}
                           </tbody>
                         </Table>
+                        {f_Data?.length == 0 ? <p style={{ textAlign: "center" }}>No Friends</p> : null}
                       </div>
-                      <div className="d-flex justify-content-end mt-4">
+                      {!f_Data?.length ? null : <div className="d-flex justify-content-end mt-4">
                         <Pagination_new
                           AllUser={AllFriends}
                           pagination={f_Pagination}
                           current_page={_F_Current_page}
                         />
-                      </div>
+                      </div>}
                     </div>
                   </Col>
 
@@ -403,7 +386,7 @@ const UserDetails = () => {
                                               ? `${pf}/${user_profile_image}`
                                               : "../images/user.png"
                                           } alt="" />
-                                          <span className="d-block">
+                                          <span className="d-block text-ellipse" style={{ width: "175px" }}>
                                             {first_name + " " + last_name}
                                           </span>
                                         </Link>
@@ -420,21 +403,22 @@ const UserDetails = () => {
                                       </span>
                                     </td>
                                     <td className="px-5">
-                                      <span>{email}</span>
+                                      <span className="text-ellipse" style={{ width: "150px" }}>{email}</span>
                                     </td>
                                   </tr>
                                 );
                               })}
                           </tbody>
                         </Table>
+                        {r_Data?.length == 0 ? <p style={{ textAlign: "center" }}>No Relationships</p> : null}
                       </div>
-                      <div className="d-flex justify-content-end mt-4">
+                      {!r_Data?.length ? null : <div className="d-flex justify-content-end mt-4">
                         <Pagination_new
                           AllUser={AllRelationships}
                           pagination={r_Pagination}
                           current_page={_R_Current_page}
                         />
-                      </div>
+                      </div>}
                     </div>
                   </Col>
 
@@ -450,7 +434,7 @@ const UserDetails = () => {
                               <div className="img-div" key={e}>
                                 <img
                                   src={
-                                    i?.path
+                                    i.path
                                       ? `${pf}/${i?.path}`
                                       : "../images/user.png"
                                   }
@@ -458,35 +442,21 @@ const UserDetails = () => {
                                   className="img-fluid"
                                 />
                                 <button onClick={() => openalbum("image", i?._id)}>
-                                  Profile Avatars
+                                  {i?.title ? i?.title : "Profile Avatars"}
                                 </button>
                               </div>
                             );
                           })}
-
-                          {/* <div className="img-div">
-                                                        <img src="../images/photo.png" alt="" className='img-fluid' />
-                                                        <button> <span> Profile Avatars </span></button>
-                                                    </div>
-
-                                                    <div className="img-div">
-                                                        <img src="../images/photo.png" alt="" className='img-fluid' />
-                                                        <button>Profile Avatars</button>
-                                                    </div>
-
-                                                    <div className="img-div">
-                                                        <img src="../images/photo.png" alt="" className='img-fluid' />
-                                                        <button>Profile Avatars</button>
-                                                    </div> */}
+                          {allAlbums?.length ? null : <h1>No data found</h1>}
                         </div>
                       </div>
-                      <div className="d-flex justify-content-end mt-4">
+                      {!allAlbums?.length ? null : <div className="d-flex justify-content-end mt-4">
                         <Pagination_new
                           AllUser={AllAlbum}
                           pagination={A_Pagination}
                           current_page={_A_Current_page}
                         />
-                      </div>
+                      </div>}
                     </div>
                   </Col>
 
@@ -498,10 +468,8 @@ const UserDetails = () => {
                       <div className="user-data-table mt-2  border-0">
                         <div className="d-flex justify-content-center flex-wrap profile-gap">
                           {allVideos?.map((v, i) => {
-                            console.log(v)
                             return (
                               <div className="img-div" key={v._id}>
-                                {/* <img src="../images/photo.png" alt="" className='img-fluid' onClick={handleShow} /> */}
                                 <img
                                   src={
                                     v?.path
@@ -519,52 +487,21 @@ const UserDetails = () => {
                                   />
                                 </span>
                                 <button onClick={() => openalbum("video", v._id)}>
-                                  {v?.title}
+                                  {v?.title ? v?.title : "Profile Avatars"}
                                 </button>
                               </div>
                             );
                           })}
-
-                          {/* <div className="img-div">
-                                                        <img src="./images/frame.svg" alt="" className='img-fluid' onClick={handleShow} />
-                                                        <Link to=''>
-                                                            <img src="./images/video-icon.svg" alt="" className='img-fluid video-icon' />
-                                                        </Link>
-                                                        <button>Profile Avatars</button>
-                                                    </div>
-
-                                                    <div className="img-div">
-                                                        <img src="./images/frame.svg" alt="" className='img-fluid' />
-                                                        <Link to=''>
-                                                            <img src="./images/video-icon.svg" alt="" className='img-fluid video-icon' />
-                                                        </Link>
-                                                        <button>Profile Avatars</button>
-                                                    </div>
-
-                                                    <div className="img-div">
-                                                        <img src="./images/frame.svg" alt="" className='img-fluid' />
-                                                        <Link to=''>
-                                                            <img src="./images/video-icon.svg" alt="" className='img-fluid video-icon' />
-                                                        </Link>
-                                                        <button>Profile Avatars</button>
-                                                    </div>
-
-                                                    <div className="img-div">
-                                                        <img src="./images/frame.svg" alt="" className='img-fluid' />
-                                                        <Link to=''>
-                                                            <img src="./images/video-icon.svg" alt="" className='img-fluid video-icon' />
-                                                        </Link>
-                                                        <button>Profile Avatars</button>
-                                                    </div> */}
+                          {allVideos?.length ? null : <h1>No data found</h1>}
                         </div>
                       </div>
-                      <div className="d-flex justify-content-end mt-4">
+                      {!allVideos?.length ? null : <div className="d-flex justify-content-end mt-4">
                         <Pagination_new
                           AllUser={AllVideo}
                           pagination={V_Pagination}
                           current_page={_V_Current_page}
                         />
-                      </div>
+                      </div>}
                     </div>
                   </Col>
                 </div>
@@ -591,21 +528,20 @@ const UserDetails = () => {
                         ? user?.relationships?.length
                         : 0}
                     </h6>
-                    <p className="rele">RelationShips</p>
+                    <p className="rele">Realtionships</p>
                   </div>
 
                   <div>
                     <h6 className="num">
-                      {allAlbums?.length ? allAlbums?.length : 0}
+                      {user?.images?.length ? user?.images?.length : 0}
                     </h6>
                     <p className="rele">Photos</p>
                   </div>
-
                   <div>
                     <h6 className="num">
-                      {allVideos?.length ? allVideos?.length : 0}
+                      {user?.videos?.length ? user?.videos?.length : 0}
                     </h6>
-                    <p className="rele">Video</p>
+                    <p className="rele">Videos</p>
                   </div>
                 </div>
               </div>
@@ -622,7 +558,9 @@ const UserDetails = () => {
         aria-labelledby="contained-modal-title-vcenter"
         centered
       >
-        <Modal.Header className="border-0" closeButton></Modal.Header>
+        <Modal.Header className="border-0" closeButton>
+          <span style={{ width: "100%", textAlign: "center", fontSize: "20px", fontWeight: "600" }}> {con + "s"}</span>
+        </Modal.Header>
         <Album
           albums={albums}
           con={con} />

@@ -154,7 +154,13 @@
     transform: translateX(-50%);
     width: calc(100% - 20px);
 }
-
+.overflow-modal{
+    overflow-y: auto;
+    height: calc(100vh - 130px);
+}
+.overflow-modal::-webkit-scrollbar{
+    display: none;
+}
 @media (max-width:1500px) {
     .user-data-frame2 .user-data-table .img-div {
         width: 257px;

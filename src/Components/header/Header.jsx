@@ -6,7 +6,6 @@ import { Auth } from "../../App";
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import "./header.css";
 import { toast } from 'react-toastify';
-//
 import { BiHomeAlt } from "react-icons/bi";
 import { NavLink } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
@@ -16,32 +15,27 @@ import { AiOutlineInfoCircle } from "react-icons/ai";
 
 const Header = (props) => {
   const navigate = useNavigate();
-  const { user,userName } = useContext(Auth)
+  const { user,userName , setUser} = useContext(Auth);
+
+
   const logout = () => {
     localStorage.clear();
-
+    setUser(null)
     navigate("/login");
-
-
-    toast.success("logout successfully")
+    toast.success("Logout Successfully")
     //  window.location.reload();
+  };
 
-  }
   const handleClickAway = (e) => {
-    console.log("--click---", e.path[0].className)
     e.preventDefault();
     props.setToggle(false)
+  };
 
-  }
+
   return (
-
     <div className="header" >
       <Button className="toggle" onClick={() => props.setToggle(!props.toggle)}><MdFilterList /></Button>
       <div className="d-flex align-items-center">
-        {/* <Button className="notification">
-          <MdOutlineNotificationsActive />
-          <span>2</span>
-        </Button> */}
         <Dropdown>
           <Dropdown.Toggle id="dropdown-basic">
             <div className="user-toggle d-flex align-items-center gap-3">
@@ -59,15 +53,12 @@ const Header = (props) => {
       </div>
       {props.toggle ? <ClickAwayListener onClickAway={handleClickAway}>
         <div className={`${props.toggle ? "m-0" : ""} hide`}>
-          {/* <div className="logo p-4">
-        <img src="../images/Skoolfame.svg" />
-      </div> */}
           <div className="menu">
             <NavLink to="/dashboard">
               <BiHomeAlt />
               Dashboard
             </NavLink>
-            <NavLink to="/user">
+            <NavLink to="/users">
               <FaRegUser />
               Users
             </NavLink>

@@ -143,6 +143,10 @@ p {
   max-width: 100%;
 }
 
+.modal{
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
 .modal-title h2 {
   font-weight: 600;
   font-size: 35px;
