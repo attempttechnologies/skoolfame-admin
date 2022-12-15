@@ -154,13 +154,16 @@
     transform: translateX(-50%);
     width: calc(100% - 20px);
 }
-.overflow-modal{
+
+.overflow-modal {
     overflow-y: auto;
     height: calc(100vh - 130px);
 }
-.overflow-modal::-webkit-scrollbar{
+
+.overflow-modal::-webkit-scrollbar {
     display: none;
 }
+
 @media (max-width:1500px) {
     .user-data-frame2 .user-data-table .img-div {
         width: 257px;
@@ -169,10 +172,12 @@
     .user-data-frame2 .user-data-table .profile-gap {
         gap: 40px;
     }
+
     .user-data .user-data-details .prof {
         width: 150px;
         height: 150px;
     }
+
     .user-data .user-data-details .count-data {
         margin: 110px auto 0;
     }

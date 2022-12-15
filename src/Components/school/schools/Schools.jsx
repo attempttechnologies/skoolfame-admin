@@ -10,7 +10,7 @@ import { getAllSchool } from "../../../controller/api";
 import localization from "moment/locale/en-in";
 import LoadingSpinner from "../../LoadingSpinner/LoaderSpinner";
 import axios from "axios";
-import {addSuperlatives} from '../../../controller/api'
+import { addSuperlatives } from '../../../controller/api'
 
 
 const Document = () => {
@@ -30,11 +30,11 @@ const Document = () => {
   const pf = process.env.REACT_APP_PUBLIC_URL;
   moment.updateLocale("en-in", localization);
 
-// METHODS
+  // METHODS
 
   const handleShow = () => setShow(true);
   const handleSuperShow = () => setSuperShow(true);
-  
+
   //
 
   const handleClose = () => {
@@ -54,28 +54,29 @@ const Document = () => {
 
   //
 
-  const deletSchool = async (i,name) => {
-    let check = window.confirm("are you sure you want to delete " + name );
-    if(check){
-    try {
-      const res = await axios.delete(`/delete-all-school?id=${i}`);
-      if (res.data.status === 1) {
-        toast.success(res.data.message);
-        AllSchool(current_page);
-      } else {
-        toast.error(res.data.message);
-       
+  const deletSchool = async (i, name) => {
+    let check = window.confirm("are you sure you want to delete " + name);
+    if (check) {
+      try {
+        const res = await axios.delete(`/delete-all-school?id=${i}`);
+        if (res.data.status === 1) {
+          toast.success(res.data.message);
+          AllSchool(current_page);
+        } else {
+          toast.error(res.data.message);
+
+        }
+      } catch (error) {
+        console.log(error, "school-page-error")
       }
-    } catch (error) {
-      console.log(error, "school-page-error")
     }
-  }
   };
 
   const addName = async () => {
-    if(newName.trim().length == 0){
+    if (newName.trim().length == 0) {
       toast.error("Please enter name");
-      return}
+      return
+    }
     try {
 
       const AllSuperlative = await addSuperlatives(newName)
@@ -88,7 +89,7 @@ const Document = () => {
       } else {
         toast.error(AllSuperlative.message);
       }
-    } catch (error) {console.log(error);}
+    } catch (error) { console.log(error); }
   };
 
   //
@@ -98,7 +99,7 @@ const Document = () => {
     if (name.trim().length == 0 || address.trim().length == 0) {
       toast.error("Please enter empty fields")
       setAddress("");
-        setName("");
+      setName("");
       return;
     }
     try {
@@ -119,7 +120,7 @@ const Document = () => {
 
   const AllSchool = async (pages) => {
     try {
-      const SchoolData = await getAllSchool(perPage, pages, searchData,rev);
+      const SchoolData = await getAllSchool(perPage, pages, searchData, rev);
       const { status, message, data, count, pagination_value, current_page: page, } = SchoolData;
       if (status === 1) {
         setAllSchools(data);
@@ -140,7 +141,7 @@ const Document = () => {
   useEffect(() => {
     AllSchool();
     document.title = "Skoolfame | Schools";
-  }, [searchData,rev]);
+  }, [searchData, rev]);
 
 
   return (
@@ -152,10 +153,10 @@ const Document = () => {
               <div className="user-data-header d-flex align-items-center justify-content-between">
                 <h1>Schools</h1>
                 <div className="d-flex align-items-center gap-2">
-                    <span className="d-flex align-items-center justify-content-end">
-                          <Button  onClick={handleShow}  className="btn-plus shadow-none" > + </Button>
-                        </span>
-                    <input  placeholder="Search name"  type="text"  value={searchData}  onChange={(e) => setSearchData(e.target.value)}/>
+                  <span className="d-flex align-items-center justify-content-end">
+                    <Button onClick={handleShow} className="btn-plus shadow-none" > + </Button>
+                  </span>
+                  <input placeholder="Search name" type="text" value={searchData} onChange={(e) => setSearchData(e.target.value)} />
                 </div>
               </div>
               <div className="user-data-table mt-4">
@@ -181,7 +182,7 @@ const Document = () => {
                       </th>
                       <th className="p-0">
                         <span className="d-flex align-items-center justify-content-end px-5">
-                          <Button  onClick={handleSuperShow}  className="btn-plus superlative shadow-none" >Add Superlatives</Button>
+                          <Button onClick={handleSuperShow} className="btn-plus superlative shadow-none" >Add Superlatives</Button>
                         </span>
                       </th>
                     </tr>
@@ -234,7 +235,7 @@ const Document = () => {
                                   className="d-flex align-items-center gap-3 p-0 text-decoration-none">
                                   <Button>Info</Button>
                                 </Link>
-                                <Button onClick={() => deletSchool(_id,name)}>Delete</Button>
+                                <Button onClick={() => deletSchool(_id, name)}>Delete</Button>
                               </div>
                             </td>
                           </tr>

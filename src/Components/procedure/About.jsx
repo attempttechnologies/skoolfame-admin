@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
-import {  Button,  Col,  Form,  Row} from "react-bootstrap";
+import { Button, Col, Form, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { updateAbout } from "../../controller/api";
 import Layout from "../../Layout";
@@ -44,12 +44,12 @@ const Procedure = () => {
               </div>
               <div className="user-data-table mt-4">
                 <TextareaAutosize className="bg-transparent border-0 area " aria-label="empty textarea" placeholder='write anything for your app'
-                  onChange={(e) => setAbout(e.target.value)} 
-                  value={about} 
+                  onChange={(e) => setAbout(e.target.value)}
+                  value={about}
                   style={{ width: "100%", minHeight: 300, border: "none", padding: "20px" }}
                 />
               </div>
-             
+
             </div>
           </Col>
         </Row>

@@ -4,7 +4,7 @@ import { Col, Row, Form } from "react-bootstrap";
 const Album = ({ albums, con }) => {
   const pf = process.env.REACT_APP_PUBLIC_URL;
   // const pf = "http://192.168.40.160:3000";
-  useEffect(()=>{document.title="Skoolfame | Albums"},[])
+  useEffect(() => { document.title = "Skoolfame | Albums" }, [])
   return (
     <div className="p-4 overflow-modal">
       <div className="user_details p-4">
@@ -20,10 +20,10 @@ const Album = ({ albums, con }) => {
                         return (
                           <>
                             <div className="img-div rounded-0" key={i}>
-                              <video  width="320"  height="240"  controls  className="img-fluid h-100" >
-                                      <source src={   v?.path     ? `${pf}/${v?.path}`     : "../images/user.png" } type="video/mp4"/>
-                                     <source src={   v?.path     ? `${pf}/${v?.path}`     : "../images/user.png" } type="video/avi"/>
-                                     Your browser does not support the video element.
+                              <video width="320" height="240" controls className="img-fluid h-100" >
+                                <source src={v?.path ? `${pf}/${v?.path}` : "../images/user.png"} type="video/mp4" />
+                                <source src={v?.path ? `${pf}/${v?.path}` : "../images/user.png"} type="video/avi" />
+                                Your browser does not support the video element.
                               </video>
                             </div>
                           </>

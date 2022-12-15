@@ -28,10 +28,10 @@ const App = () => {
   const AuthToken = localStorage.getItem('token') ? `Bearer ${localStorage.getItem('token')}` : "";
 
   // axios.defaults.baseURL = "http://192.168.40.160:3000/admin"
-   axios.defaults.baseURL = `${window.location.origin}/admin`;
+  axios.defaults.baseURL = `${window.location.origin}/admin`;
   //  process.env.REACT_APP_API_URL    #REACT_APP_PUBLIC_URL="http://192.168.40.160:3000"
   axios.defaults.headers.Authorization = AuthToken;
-  
+
   const Home = () => {
     return (
       <>
@@ -44,14 +44,14 @@ const App = () => {
   return (
     <>
       <ToastContainer />
-      <Auth.Provider value={{ token, setToken, user, setUser,userName,setUserName }}>
+      <Auth.Provider value={{ token, setToken, user, setUser, userName, setUserName }}>
         <HashRouter>
           <Routes>
             <Route exact path="/" element={user ? <Home /> : <Navigate to="/login" />} >
               <Route index element={<Dashboard />} />
               <Route exact path="/dashboard" element={<Dashboard />} />
               <Route exact path="/users" element={<User />} />
-              <Route exact path="/profile" element={<Profile/>} />
+              <Route exact path="/profile" element={<Profile />} />
               <Route exact path="/schools" element={<Schools />} />
               <Route exact path="/request-schools" element={<School_Requests />} />
               <Route exact path="/about" element={<About />} />
@@ -60,9 +60,9 @@ const App = () => {
               <Route exact path="/userdetails/:id" element={<UserDetails />} />
               <Route exact path="/Superlatives/:id" element={<SchoolDetails />} />
             </Route>
-            <Route exact path="/login" element={user ?  <Navigate to="/" /> : <Login />} />
+            <Route exact path="/login" element={user ? <Navigate to="/" /> : <Login />} />
             <Route path="*" element={<Notfound />} />
-           
+
           </Routes>
         </HashRouter>
       </Auth.Provider>

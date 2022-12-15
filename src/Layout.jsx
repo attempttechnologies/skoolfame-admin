@@ -6,20 +6,20 @@ import Sidebar from './Components/sidebar/Sidebar'
 const Layout = (props) => {
 
   const [toggle, setToggle] = useState(false)
-  const url= useLocation();
+  const url = useLocation();
 
   return (
     <div>
-        <Sidebar toggle={toggle} setToggle={setToggle} urls={url.pathname.split("/")[1]}/>
+      <Sidebar toggle={toggle} setToggle={setToggle} urls={url.pathname.split("/")[1]} />
 
-        <main className='dashboard-main'>
-            {
-                <Header setToggle={setToggle} toggle={toggle} />
-            }
-       
-            {props.children}
+      <main className='dashboard-main'>
+        {
+          <Header setToggle={setToggle} toggle={toggle} />
+        }
 
-        </main>
+        {props.children}
+
+      </main>
     </div>
   )
 }

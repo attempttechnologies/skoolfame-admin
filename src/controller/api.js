@@ -32,7 +32,7 @@ export const login = async (requestData) => {
 
 export const getAllUser = async (perPage, page = 1, searchData, rev) => {
   try {
-    const AllUser = await axios.get( `/all-user?perPage=${perPage}&page=${page}&search=${searchData}&ascending=${rev}`);
+    const AllUser = await axios.get(`/all-user?perPage=${perPage}&page=${page}&search=${searchData}&ascending=${rev}`);
     const { data } = AllUser;
     return data;
   } catch (error) {
@@ -69,7 +69,7 @@ export const addSuperlatives = async (name) => {
   try {
     // console.log(name,"=========Name==========");
     // return
-    const AllSchool = await axios.post(`/add-all-superlative`,{name});
+    const AllSchool = await axios.post(`/add-all-superlative`, { name });
     const { data } = AllSchool;
     return data;
   } catch (error) {

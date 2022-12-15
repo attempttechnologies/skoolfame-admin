@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../../../Layout";
-import {  Col,  Row,  Table,  Pagination,  Form,  Modal,  Button,  NavLink,} from "react-bootstrap";
+import { Col, Row, Table, Pagination, Form, Modal, Button, NavLink, } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
 import { getSchool } from "../../../controller/api";
 import { Toast } from "bootstrap";
@@ -21,14 +21,14 @@ const SchoolDetail = () => {
   const [current_page, setCurrent_page] = useState(1);
   const [loading, setLoading] = useState(true);
   const [newName, setNewName] = useState("");
-  
+
   const { id } = useParams();
   const perPage = 5;
   const pf = process.env.REACT_APP_PUBLIC_URL;
   moment.updateLocale("en-in", localization);
 
   // METHODS
-  
+
   const handleClose = () => {
     setShow(false);
     setNewName("");
@@ -41,11 +41,12 @@ const SchoolDetail = () => {
   };
 
   const addName = async () => {
-    if(newName.trim().length == 0){
+    if (newName.trim().length == 0) {
       toast.error("Please enter name");
-      return}
+      return
+    }
     try {
-      const res = await axios.post("/add-superlative", {  school_id: id,  name: newName,});
+      const res = await axios.post("/add-superlative", { school_id: id, name: newName, });
       if (res.data.status == 1) {
         setShow(false);
         SchoolDetails(current_page);
@@ -54,13 +55,13 @@ const SchoolDetail = () => {
       } else {
         toast.error(res.data.message);
       }
-    } catch (error) {console.log(error);}
+    } catch (error) { console.log(error); }
   };
 
 
   const SchoolDetails = async (pages) => {
     try {
-      const SchoolData = await getSchool(perPage, pages, searchData, id,rev);
+      const SchoolData = await getSchool(perPage, pages, searchData, id, rev);
       const { status, message, data, count, paginationValue, page } =
         SchoolData;
       if (status === 1) {
@@ -79,12 +80,12 @@ const SchoolDetail = () => {
 
   useEffect(() => {
     SchoolDetails();
-  }, [searchData,rev]);
+  }, [searchData, rev]);
 
-  useEffect(()=>{
-    document.title="Skoolfame | Superlatives"
-  },[])
- 
+  useEffect(() => {
+    document.title = "Skoolfame | Superlatives"
+  }, [])
+
 
   return (
     <Layout>
@@ -95,7 +96,7 @@ const SchoolDetail = () => {
               <div className="user-data-header d-flex align-items-center justify-content-between">
                 <h1>Superlatives </h1>
                 <input
-                placeholder="Search name"
+                  placeholder="Search name"
                   type="text"
                   value={searchData}
                   onChange={(e) => setSearchData(e.target.value)}
@@ -114,7 +115,7 @@ const SchoolDetail = () => {
                       <th className="p-0">
                         <span className="d-flex py-3 px-5">
                           Created At
-                          <Button className="bg-transparent border-0 shadow-none p-0"  onClick={rever}>
+                          <Button className="bg-transparent border-0 shadow-none p-0" onClick={rever}>
                             <img src="../images/sorting-new.png" alt="" />
                           </Button>
                         </span>
@@ -130,7 +131,7 @@ const SchoolDetail = () => {
                     {!loading &&
                       schools.length !== 0 &&
                       schools?.map((school) => {
-                        const {  _id,  user_profile_image,  name,  createdAt,  users,  category_name,} = school;
+                        const { _id, user_profile_image, name, createdAt, users, category_name, } = school;
                         return (
                           <tr key={_id}>
                             <td className="bg-orange">

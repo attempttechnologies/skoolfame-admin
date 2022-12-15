@@ -32,29 +32,29 @@ const Nominees = () => {
         if (pages === 1) {
             setNominees(searchData ? schoolss.filter((user) => `${user.users?.first_name + " " + user?.users?.last_name}`.toLowerCase().includes(searchData)).slice(pages - 1, per_page) : schools.slice(pages - 1, per_page));
         } else {
-            setNominees(searchData ? schoolss.filter((user) => `${user.users?.first_name + " " + user?.users?.last_name}`.toLowerCase().includes(searchData)).slice(pages * per_page - per_page, pages * per_page ) : schools.slice(pages * per_page - per_page, pages * per_page));
+            setNominees(searchData ? schoolss.filter((user) => `${user.users?.first_name + " " + user?.users?.last_name}`.toLowerCase().includes(searchData)).slice(pages * per_page - per_page, pages * per_page) : schools.slice(pages * per_page - per_page, pages * per_page));
         }
         setCurrent_page(pages);
     };
 
 
     const rever = () => {
-       if(nominees.length>1) {
-        setNominees([...nominees].reverse())
-    }
+        if (nominees.length > 1) {
+            setNominees([...nominees].reverse())
+        }
     };
 
-    
+
     //for serching
 
     useEffect(() => {
         const searching = (e) => {
             setCurrent_page(1);
             // setFors(true)
-            if (searchData.length ) {
-               
+            if (searchData.length) {
+
                 setNominees(schoolss.filter((user) => `${user.users?.first_name + " " + user?.users?.last_name}`.toLowerCase().includes(searchData)).slice(0, per_page));
-               
+
                 setPagination(nominees ? Math.ceil(schoolss.filter((user) => `${user.users?.first_name + " " + user?.users?.last_name}`.toLowerCase().includes(searchData))?.length / per_page) : 1)
 
             } else {
@@ -85,10 +85,10 @@ const Nominees = () => {
             }
         };
         getSingleUser();
-        document.title="Skoolfame | Nominees";
+        document.title = "Skoolfame | Nominees";
     }, []);
 
-    
+
 
     return (
         <Layout>
@@ -98,7 +98,7 @@ const Nominees = () => {
                         <div className="user-data">
                             <div className="user-data-header d-flex align-items-center justify-content-between">
                                 <h1>Nominees</h1>
-                                <input  placeholder="Search name"  type="text"  value={searchData}  onChange={(e) => setSearchData(e.target.value)} />
+                                <input placeholder="Search name" type="text" value={searchData} onChange={(e) => setSearchData(e.target.value)} />
                             </div>
                             <div className="user-data-table mt-4">
                                 <Table responsive className="mb-0 px-4 pb-2">
@@ -116,7 +116,7 @@ const Nominees = () => {
                                             <th className="p-0">
                                                 <span className="d-flex py-3 px-5">
                                                     Created At
-                                                    <Button className="bg-transparent border-0 shadow-none p-0"  onClick={rever} >
+                                                    <Button className="bg-transparent border-0 shadow-none p-0" onClick={rever} >
                                                         <img src="../images/sorting-new.png" alt="" />
                                                     </Button>
                                                 </span>

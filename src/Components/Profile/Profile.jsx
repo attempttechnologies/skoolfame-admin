@@ -8,7 +8,7 @@ import "./profile.css";
 
 const Profile = () => {
     const { user, setUserName, userName } = useContext(Auth);
-  
+
     const [password, setPassword] = useState({
         oldPassword: "",
         newPassword: "",
@@ -37,7 +37,7 @@ const Profile = () => {
 
     const changePass = async (e) => {
         e.preventDefault();
-      
+
         if (password.newPassword.trim().length == 0) {
             toast.error("please enter password");
             return
@@ -48,9 +48,9 @@ const Profile = () => {
         }
         if (password.newPassword === password.conformPassword) {
             try {
-              
+
                 const res = await axios.patch(`/update-profile?id=${user?._id}`, { new_password: password.newPassword, old_password: password.oldPassword })
-             
+
                 if (res.data.status === 1) {
                     setPassword({
                         oldPassword: "",

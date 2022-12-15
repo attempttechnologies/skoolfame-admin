@@ -42,9 +42,3 @@
   content: "Placeholder still possible";
   color: gray;
 }
-
-@media (max-width: 600px) {
-  .procedure-main {
-    padding: 15px !important;
-  }
-}

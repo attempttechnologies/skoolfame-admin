@@ -38,7 +38,7 @@ const Login = (e) => {
       }
       const loginResponse = await login(loginData);
       const { status, message, data, token } = loginResponse;
-      
+
       if (status === 1) {
         localStorage.setItem("token", token);
         setToken(token);
@@ -60,7 +60,7 @@ const Login = (e) => {
     const callback = (event) => {
       if (event.key === 'Enter') { ref.current.click() }
     };
-    
+
     document.addEventListener('keydown', callback);
     document.title = "Skoolfame | Login";
     return () => {
@@ -77,7 +77,7 @@ const Login = (e) => {
         <div className='login-form'>
           <input type="text" placeholder='Email Address' name='email' value={loginData.email} onChange={(e) => setLoginData({ ...loginData, [e.target.name]: e.target.value })} />
           <input className='mt-4' type="password" placeholder='Password' name='password' value={loginData.password} onChange={(e) => setLoginData({ ...loginData, [e.target.name]: e.target.value })} />
-          
+
           <div className='d-flex justify-content-end'>
           </div>
           <Button to="/dashboard" ref={ref} className='login-btn shadow-none' onClick={handelSubmit} disabled={loading ? true : false}>{loading ? <CircularProgress style={{ color: "white" }} /> : "Login"}</Button>

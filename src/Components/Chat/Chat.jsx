@@ -60,19 +60,19 @@ const chat = () => {
 
     useEffect(() => {
         console.log("first")
-        
+
         sref.current?.scrollIntoView({ behavior: "smooth" })
-       
-        
+
+
         // ref.current.offsetTop === ref.current.offsetHeight;
-       
+
         // ref.current.scrollTo({top:ref.current.offsetHeight ,
         //     behavior: 'auto'})
-     
-       
+
+
         const re = setTimeout(() => {
             // sref.current?.scrollIntoView({ behavior: "auto" })
-        ref.current.scrollTop = ref.current.scrollHeight;
+            ref.current.scrollTop = ref.current.scrollHeight;
         }, 100);
 
         return () => {
@@ -80,14 +80,14 @@ const chat = () => {
         }
     }, [chats]);
 
-   
+
 
 
     useEffect(() => {
         getUser()
         document.title = "Skoolfame | Chat"
     }, []);
-    
+
 
 
     useEffect(() => {
@@ -124,7 +124,7 @@ const chat = () => {
                                                             <span className="time"> {moment(lastmessage?.createdAt).format('L')},{moment(lastmessage?.createdAt).format('LT')}</span>
                                                         </div>
                                                         <div>
-                                                            <p>{lastmessage?.message ? lastmessage.message.split("/")[0]=="images"?<div><InsertPhotoIcon/>Photo</div>:lastmessage.message.split("/")[0]=="videos"?<div><VideocamIcon/>Video</div>:lastmessage?.message:null} </p>
+                                                            <p>{lastmessage?.message ? lastmessage.message.split("/")[0] == "images" ? <div><InsertPhotoIcon />Photo</div> : lastmessage.message.split("/")[0] == "videos" ? <div><VideocamIcon />Video</div> : lastmessage?.message : null} </p>
                                                         </div>
                                                     </div>
                                                 </div>

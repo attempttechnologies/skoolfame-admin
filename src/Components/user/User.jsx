@@ -43,9 +43,9 @@ const User = (props) => {
 
   };
 
-  const deletUser = async (i,name) => {
-    let check = window.confirm("are you sure you want to delete " + name );
-    if(check){
+  const deletUser = async (i, name) => {
+    let check = window.confirm("are you sure you want to delete " + name);
+    if (check) {
       try {
         const res = await axios.delete("/delete-user", { data: { id: i } });
         if (res.data.status === 1) {
@@ -53,7 +53,7 @@ const User = (props) => {
           AllUser(current_page);
         } else {
           toast.error(res.data.message);
-          
+
         }
       } catch (error) {
         console.log(error);
@@ -65,7 +65,7 @@ const User = (props) => {
   const AllUser = async (pages = 1) => {
     setLoading(true);
     try {
-      const User = await getAllUser(perPage, pages, searchData,rev);
+      const User = await getAllUser(perPage, pages, searchData, rev);
       if (User) {
         const { status, message, data, count, paginationValue, page } = User;
         if (status === 1) {
@@ -87,8 +87,8 @@ const User = (props) => {
   useEffect(() => {
 
     AllUser();
-    
-  }, [searchData,rev]);
+
+  }, [searchData, rev]);
 
   useEffect(() => {
     document.title = "Skoolfame | Users"
@@ -179,7 +179,7 @@ const User = (props) => {
                               <Link to={`/chat/${_id}`}>
                                 <Button>Chat</Button>
                               </Link>
-                              <Button onClick={() => deletUser(_id,`${first_name + " " + last_name}`)}>Delete</Button>
+                              <Button onClick={() => deletUser(_id, `${first_name + " " + last_name}`)}>Delete</Button>
                             </div>
                           </td>
                         </tr>

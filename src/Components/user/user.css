@@ -159,8 +159,9 @@ button.btn-plus {
   justify-content: center;
   font-weight: 600;
 }
-.superlative{
-  width:fit-content !important ;
+
+.superlative {
+  width: fit-content !important;
   font-size: 16px !important;
 }
 
@@ -202,11 +203,13 @@ button.btn-plus {
 .page-item.active {
   border-radius: 7px;
 }
+
 .page-link:focus {
   color: #F97639;
   background-color: transparent;
   box-shadow: none;
 }
+
 .page-item.active .page-link {
   background: linear-gradient(180.35deg, #FFC051 0.29%, #FA803C 52.38%, #F86333 99.69%);
   color: #ffff;
